@@ -78,6 +78,15 @@ for i in range(num_cities):
     cities.append(city)
 
 
+#write on collected-data.txt the cities
+with open("collected-data.txt", "a") as file:
+ 
+    file.write("Departure city: " + departure_city + "\n")
+    #write the cities in the file without the departure city
+    file.write("Cities to visit: " + ", ".join(cities[1:]) + "\n")
+
+
+
 
 #list of unique combinations of two cities
 combinations = []
@@ -95,13 +104,18 @@ for combination in combinations:
     distance = get_distance(origin, destination)
     distances[str(combination)] = distance
 
-print("\n")
-print("Distances:")
-for key, value in distances.items():
-    print(key, value)
+#write on collected-data.txt the distances
+with open("collected-data.txt", "a") as file:
+    file.write("\nDistances:\n")
+    for key, value in distances.items():
+        file.write(key + " " + str(value) + "\n")
+
 
 
 route, total_distance = greedy_route(departure_city, cities, distances)
 
-print("\n")
-print("Greedy route:", " -> ".join(route))
+#write on collected-data.txt the greedy route and the total distance
+with open("collected-data.txt", "a") as file:
+    file.write("\nGreedy route: " + " -> ".join(route) + "\n")
+    file.write("Total distance: " + str(total_distance) + " km\n\n")
+    file.write("------------------------------------------------------------\n")
