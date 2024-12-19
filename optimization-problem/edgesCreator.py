@@ -1,12 +1,12 @@
 from typing import List
 
-def _createPossiblesDestinations(cities: List[str], origin: str, step: int = 0) -> List[str]:
+def _createPossiblesDestinations(cities: List[str], origin: str, dates: List[str], step: int = 0) -> List[str]:
     destinations = []
 
     for city in cities:
-        destinations.append([step, origin, city])
+        destinations.append([dates[step], origin, city])
         _cities = _removeCityFromCities(city, cities)
-        destinations.extend(_createPossiblesDestinations(_cities, city, step + 1))
+        destinations.extend(_createPossiblesDestinations(_cities, city, dates, step + 1))
     
     return destinations
 
@@ -18,7 +18,7 @@ def _removeCityFromCities(cityToExclude: str, allCities: List[str]) -> List[str]
     
     return cities
 
-def createEdges(cities: List[str], origin: str) -> List[str]:
+def createEdges(cities: List[str], origin: str, dates: List[str]) -> List[List[str]]:
     """
     :param cities: destinations
     :param origin: origin city
@@ -29,9 +29,9 @@ def createEdges(cities: List[str], origin: str) -> List[str]:
         origin: str = "Paris"
         createEdges(destinations, origin)
     """
-    edges = _createPossiblesDestinations(cities, origin)
+    edges = _createPossiblesDestinations(cities, origin, dates)
     
     for city in cities:
-        edges.append([len(cities), city, origin])
+        edges.append([dates[len(cities) - 1], city, origin])
     
     return edges

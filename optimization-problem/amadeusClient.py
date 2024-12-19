@@ -2,6 +2,7 @@ import requests
 import credentials
 from typing import Dict, List
 import json
+from math import pow
 
 TOKEN_URL = "https://test.api.amadeus.com/v1/security/oauth2/token"
 
@@ -23,7 +24,7 @@ class AmadeusClient:
 
         return token
 
-    def getFlighPricesBasedOn(self, flights: List[List[str]]):
+    def getFlighPricesBasedOn(self, flights: List[str]):
         
         token = self._authenticate()
 
@@ -36,23 +37,23 @@ class AmadeusClient:
 
         payload = json.dumps(self._createPayloadBasedOn(flights))
 
-
-        response = requests.request("POST", url, headers=headers, data=payload)
-
-        print(response.text)
-
+        try:
+            response = requests.request("POST", url, headers=headers, data=payload).json()
+            return { "VALID": True, "PRICE": response["data"][0]["price"]["total"]}
+        except:
+            return { "VALID": False, "PRICE": pow(10,10)}
     
-    def _createPayloadBasedOn(self, flights:  List[List[str]]):
+    def _createPayloadBasedOn(self, flight: List[str]):
         return {
-            "currencyCode": "USD",
+            "currencyCode": "EUR",
             "originDestinations": [
                 {
                 "id": "1",
-                "originLocationCode": "BOS",
-                "destinationLocationCode": "MAD",
+                "originLocationCode": flight[1],
+                "destinationLocationCode": flight[2],
+                "oneWay": True,
                 "departureDateTimeRange": {
-                    "date": "2025-01-01",
-                    "time": "10:00:00"
+                    "date": flight[0]
                 }
                 }
             ],
@@ -64,38 +65,11 @@ class AmadeusClient:
                     "STANDARD"
                 ]
                 },
-                {
-                "id": "2",
-                "travelerType": "CHILD",
-                "fareOptions": [
-                    "STANDARD"
-                ]
-                }
             ],
             "sources": [
                 "GDS"
             ],
             "searchCriteria": {
-                "maxFlightOffers": 2,
-                "flightFilters": {
-                "cabinRestrictions": [
-                    {
-                    "cabin": "BUSINESS",
-                    "coverage": "MOST_SEGMENTS",
-                    "originDestinationIds": [
-                        "1"
-                    ]
-                    }
-                ],
-                "carrierRestrictions": {
-                    "excludedCarrierCodes": [
-                    "AA",
-                    "TP",
-                    "AZ"
-                    ]
-                }
-                }
+                "maxFlightOffers": 1
             }
         }
-
-
