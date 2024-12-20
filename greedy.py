@@ -17,8 +17,10 @@ def get_distance(origin, destination):
     distance_element = soup.find("span", class_="value km")
     if distance_element: #turn the distance into float
         return float(distance_element.text.replace(",", ""))
+        #if conversion fails, return the string
+
     else:
-        return "Elemento não encontrado."
+        return distance_element
     
 #function to simulate a greedy route that people would usually take
 def greedy_route(departure_city, cities, distances):

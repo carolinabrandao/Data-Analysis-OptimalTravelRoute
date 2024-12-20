@@ -1,0 +1,126 @@
+Departure city: belo horizonte
+Cities to visit: paris, lisboa, berlim, istambul
+
+Distances:
+['belo horizonte', 'paris'] 8913.6
+['belo horizonte', 'lisboa'] 7459.55
+['belo horizonte', 'berlim'] 9763.97
+['belo horizonte', 'istambul'] 10104.1
+['paris', 'lisboa'] 1454.06
+['paris', 'berlim'] 878.08
+['paris', 'istambul'] 2255.27
+['lisboa', 'berlim'] 2313.75
+['lisboa', 'istambul'] 3237.25
+['berlim', 'istambul'] 1737.3
+
+Greedy route: belo horizonte -> lisboa -> paris -> berlim -> istambul
+Total distance: 11528.99 km
+
+------------------------------------------------------------
+Departure city: Rio de Janeiro
+Cities to visit: Cancun, new york, san francisco, las vegas
+
+Distances:
+['Rio de Janeiro', 'Cancun'] 6807.2
+['Rio de Janeiro', 'new york'] 7757.32
+['Rio de Janeiro', 'san francisco'] 10659.2
+['Rio de Janeiro', 'las vegas'] 10001.58
+['Cancun', 'new york'] 2489.75
+['Cancun', 'san francisco'] 3876.57
+['Cancun', 'las vegas'] 3209.03
+['new york', 'san francisco'] 4129.06
+['new york', 'las vegas'] 3584.44
+['san francisco', 'las vegas'] 670.71
+
+Greedy route: Rio de Janeiro -> Cancun -> new york -> las vegas -> san francisco
+Total distance: 13552.100000000002 km
+
+------------------------------------------------------------
+Departure city: sao paulo
+Cities to visit: london, new york, cairo, jerusalem, boston
+
+Distances:
+['sao paulo', 'london'] 9496.72
+['sao paulo', 'new york'] 7685.36
+['sao paulo', 'cairo'] 10221.92
+['sao paulo', 'jerusalem'] 10644.39
+['sao paulo', 'boston'] 7745.67
+['london', 'new york'] 5570.48
+['london', 'cairo'] 3509.86
+['london', 'jerusalem'] 3607.2
+['london', 'boston'] 5264.7
+['new york', 'cairo'] 9021.38
+['new york', 'jerusalem'] 9166.5
+['new york', 'boston'] 305.84
+['cairo', 'jerusalem'] 422.65
+['cairo', 'boston'] 8716.88
+['jerusalem', 'boston'] 8860.8
+
+Greedy route: sao paulo -> new york -> boston -> london -> cairo -> jerusalem
+Total distance: 17188.41 km
+
+------------------------------------------------------------
+Departure city: paris
+Cities to visit: munique, amsterdam, madrid, porto
+
+Distances:
+['paris', 'munique'] 684.27
+['paris', 'amsterdam'] 430.13
+['paris', 'madrid'] 1052.74
+['paris', 'porto'] 1213.03
+['munique', 'amsterdam'] 668.71
+['munique', 'madrid'] 1484.7
+['munique', 'porto'] 1769.16
+['amsterdam', 'madrid'] 1481.43
+['amsterdam', 'porto'] 1611.75
+['madrid', 'porto'] 421.29
+
+Greedy route: paris -> amsterdam -> munique -> madrid -> porto
+Total distance: 3004.83 km
+
+------------------------------------------------------------
+Departure city: sao paulo
+Cities to visit: santiago, buenos aires, medelin, la paz, assuncion, montevideo
+
+Distances:
+['sao paulo', 'santiago'] 2575.34
+['sao paulo', 'buenos aires'] 1675.39
+['sao paulo', 'medelin'] 8120.75
+['sao paulo', 'la paz'] 2376.96
+['sao paulo', 'assuncion'] 1129.89
+['sao paulo', 'montevideo'] 1556.85
+['santiago', 'buenos aires'] 1130.44
+['santiago', 'medelin'] 10425.08
+['santiago', 'la paz'] 1897.53
+['santiago', 'assuncion'] 1543.98
+['santiago', 'montevideo'] 1342.83
+['buenos aires', 'medelin'] 9780.07
+['buenos aires', 'la paz'] 2236.89
+['buenos aires', 'assuncion'] 1040.01
+['buenos aires', 'montevideo'] 213.31
+['medelin', 'la paz'] 8907.9
+['medelin', 'assuncion'] 8919.13
+['medelin', 'montevideo'] 9676.87
+['la paz', 'assuncion'] 1463.91
+['la paz', 'montevideo'] 2372.04
+['assuncion', 'montevideo'] 1079.34
+
+Greedy route: sao paulo -> assuncion -> buenos aires -> montevideo -> santiago -> la paz -> medelin
+Total distance: 14531.47 km
+
+------------------------------------------------------------
+Departure city: paris
+Cities to visit: singapore, seoul, tokyo
+
+Distances:
+['paris', 'singapore'] 10726.46
+['paris', 'seoul'] 8965.79
+['paris', 'tokyo'] 9712.13
+['singapore', 'seoul'] 4671.54
+['singapore', 'tokyo'] 5315.27
+['seoul', 'tokyo'] 1152.62
+
+Greedy route: paris -> seoul -> tokyo -> singapore
+Total distance: 15433.68 km
+
+------------------------------------------------------------
