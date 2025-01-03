@@ -39,6 +39,7 @@ class AmadeusClient:
 
         try:
             response = requests.request("POST", url, headers=headers, data=payload).json()
+            print(f"{flights} {response["data"][0]["price"]["total"]}")
             return { "VALID": True, "PRICE": response["data"][0]["price"]["total"]}
         except:
             return { "VALID": False, "PRICE": pow(10,10)}
