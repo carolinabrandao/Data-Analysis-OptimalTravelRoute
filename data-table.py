@@ -4,36 +4,30 @@ from itertools import permutations
 import cloudscraper
 from bs4 import BeautifulSoup
 
-import time
-import logging
+def get_distance(origin, destination, distance_cache):
+    # Check cache first
+    pair = tuple(sorted([origin, destination]))
+    if pair in distance_cache:
+        return distance_cache[pair]
 
-def get_distance(origin, destination):
     # scraper to bypass cloudflare
     scraper = cloudscraper.create_scraper()
 
     url = f"https://www.distance.to/{origin}/{destination}"
-    retries = 3  # Number of retry attempts
-    delay = 0.3  # Delay between retries in seconds
+    response = scraper.get(url)
 
-    for attempt in range(retries):
-        try:
-            time.sleep(delay)
-            response = scraper.get(url)
+    # process the html
+    soup = BeautifulSoup(response.text, 'html.parser')
 
-            # process the html
-            soup = BeautifulSoup(response.text, 'html.parser')
-
-            # find the distance element
-            distance_element = soup.find("span", class_="value km")
-            if distance_element:  # turn the distance into float
-                return float(distance_element.text.replace(",", ""))
-        except Exception as e:
-            logging.warning(f"Attempt {attempt + 1} failed for {origin} -> {destination}: {e}")
-            time.sleep(delay)
-
-    # If all retries fail, log the issue and return None
-    logging.error(f"Failed to retrieve distance for {origin} -> {destination} after {retries} attempts.")
-    return None
+    # find the distance element
+    distance_element = soup.find("span", class_="value km")
+    if distance_element:  # turn the distance into float
+        distance = float(distance_element.text.replace(",", ""))
+        distance_cache[pair] = distance  # Cache the result
+        return distance
+    else:
+        distance_cache[pair] = None
+        return None
 
 def get_flight_info():
     print("Enter the origin city and its airport code:")
@@ -56,6 +50,8 @@ def get_flight_info():
 def generate_flight_combinations(origin, origin_code, destinations, start_date, route):
     start_date_obj = datetime.strptime(start_date, "%Y/%m/%d")
     flight_data = []
+    unique_rows = set()
+    distance_cache = {}
 
     destination_permutations = permutations(destinations)
 
@@ -66,18 +62,25 @@ def generate_flight_combinations(origin, origin_code, destinations, start_date, 
             current_city, current_code = trip[i]
             next_city, next_code = trip[i + 1]
             flight_date = current_date.strftime("%Y/%m/%d")
-            distance = get_distance(current_city, next_city)
+            distance = get_distance(current_city, next_city, distance_cache)
 
-            flight_data.append({
-                "Origin City": current_city,
-                "Origin Airport": current_code,
-                "Destination City": next_city,
-                "Destination Airport": next_code,
-                "Date": flight_date,
-                "Route Number": route,
-                "Distance (km)": distance,
-                "Price": 0
-            })
+            row = (
+                current_city, current_code, next_city, next_code, flight_date, route, distance, 0
+            )
+
+            if row not in unique_rows:
+                unique_rows.add(row)
+                flight_data.append({
+                    "Origin City": current_city,
+                    "Origin Airport": current_code,
+                    "Destination City": next_city,
+                    "Destination Airport": next_code,
+                    "Date": flight_date,
+                    "Route Number": route,
+                    "Distance (km)": distance,
+                    "Price": 0
+                })
+
             current_date += timedelta(days=4)
 
     return flight_data
