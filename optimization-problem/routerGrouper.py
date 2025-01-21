@@ -1,46 +1,12 @@
 from pandas import read_csv
 from typing import Dict,List
-
-
-class FlightModel:
-    origin: str
-    destination: str
-    data: str
-    price: float
-
-    def __init__(self, data: Dict[str, str]):
-        self.origin = data["Origin Airport"]
-        self.destination = data["Destination Airport"]
-        self.price = data["Price"]
-        self.data = data["Date"]
-        pass
-
-class OptimizationProblem:
-    days: List[str]
-    cities: List[str]
-    origin: str
-    flights: List[FlightModel]
-
-    def __init__(self, data: List[FlightModel]):
-        self.days = []
-        self.cities = []
-        self.flights = []
-        days = {}
-        cities = {}
-
-        for flight in data:
-            days[flight.data] = True
-            cities[flight.origin] = True
-            self.flights.append(flight)
-            
-        self.days = days.keys()
-        self.cities = cities.keys()
-        self.origin = self.flights[0].origin
-        pass
+from routing_optimized import solve
+from models import FlightModel, OptimizationProblem
 
 flights = read_csv("flights_priced.csv")
 
 flightsByRouteId: Dict[int, List[FlightModel]] = {}
+cityByAirport: Dict[str, str] = {}
 
 #Origin City, Origin Airport, Destination City, Destination Airport, Date, Route Number, Distance (km), Price
 
@@ -51,9 +17,22 @@ for index, flight in flights.iterrows():
         flightsByRouteId[routeId] = []
     
     flightsByRouteId[routeId].append(FlightModel(flight))
+    cityByAirport[flight["Origin Airport"]] = flight["Origin City"]
 
-problems: Dict[int, List[OptimizationProblem]] = {}
+optimalsPrice = []
+paths = []
 
 for routeId in flightsByRouteId:
-    problems[routeId] = OptimizationProblem(flightsByRouteId[routeId])
+    print(f"flights {len(flightsByRouteId[routeId])} from route {routeId}")
+    problem = OptimizationProblem(flightsByRouteId[routeId])
+    solution = solve(problem)
+    optimalsPrice.append(round(sum(flight.price for flight in solution), 2))
+    paths.append([cityByAirport[flight.origin] for flight in solution if flight.origin != problem.origin])
 
+
+routes_df = read_csv("routes_info.csv")
+
+routes_df["Optimal Price"] = optimalsPrice
+routes_df["Optimal Route"] = paths
+
+routes_df.to_csv("routes_info_optimal.csv")
