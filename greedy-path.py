@@ -1,10 +1,8 @@
 import pandas as pd
 from datetime import timedelta
 
-# Load the main CSV
 routes_df = pd.read_csv("flights.csv")
 
-# Ensure Date is properly parsed as datetime
 routes_df['Date'] = pd.to_datetime(routes_df['Date'])
 
 # Load the starting city and date for each route number
@@ -13,14 +11,9 @@ start_city_df['Start Date'] = pd.to_datetime(start_city_df['Start Date'])
 
 def find_greedy_path_with_distances(df, start_city, start_date):
     """
-    Find the greedy path starting from a city, considering only distances,
-    and calculate prices based on the travel dates, including return to origin.
-    
-    Parameters:
-        df (DataFrame): The dataframe containing routes.
-        start_city (str): The starting city.
-        start_date (datetime): The starting date.
-        
+    Find the greedy path starting from a city, considering only closest distances,
+    and calculate prices of the greedy route.
+   
     Returns:
         tuple: (visited cities, total distance, total price)
     """
@@ -73,7 +66,7 @@ def find_greedy_path_with_distances(df, start_city, start_date):
     return_flight_on_date = return_flights[return_flights['Date'] == current_date]
 
     if not return_flight_on_date.empty:
-        # If a return flight is available, add only its price
+        # If a return flight is available, add the price and distance back to the total
         return_flight = return_flight_on_date.iloc[0]
         return_price = return_flight['Price']
         total_price += return_price
@@ -82,8 +75,6 @@ def find_greedy_path_with_distances(df, start_city, start_date):
     return visited_cities, round(total_distance,2), round(total_price,2)
 
 
-
-# Initialize results dictionary
 results = []
 
 # Group the data by route number
@@ -113,6 +104,3 @@ results_df = pd.DataFrame(results)
 
 # Save the results to a CSV
 results_df.to_csv("greedy_path.csv", index=False)
-
-# Display the results
-print(results_df)

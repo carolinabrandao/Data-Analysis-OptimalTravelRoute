@@ -5,7 +5,7 @@ import cloudscraper
 from bs4 import BeautifulSoup
 
 def get_distance(origin, destination, distance_cache):
-    # Check cache first
+    # Check cache first, to avoid unnecessary requests
     pair = tuple(sorted([origin, destination]))
     if pair in distance_cache:
         return distance_cache[pair]
@@ -55,6 +55,7 @@ def generate_flight_combinations(origin, origin_code, destinations, start_date, 
 
     destination_permutations = permutations(destinations)
 
+    # Generate all possible flight combinations between origin and destinations
     for perm in destination_permutations:
         current_date = start_date_obj
         trip = [(origin, origin_code)] + list(perm) + [(origin, origin_code)]
