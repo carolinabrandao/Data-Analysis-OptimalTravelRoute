@@ -73,7 +73,7 @@ def solve(problem: OptimizationProblem) -> List[FlightModel]:
 
         # ensuring that every destination is also an origin of another travel in the same day
         # also this ensure that every route created in a correct time order, considering that the date only has as initial travels 
-        # (0,0) to (c, 1) -> being c any city 
+        # (0,0) to (c, 1) -> being c any city, desregarind the origin city 
         model.addConstrs(
             (quicksum(x[(c0,cx)] for cx in cities_in_time if (cx[0] != 0 or cx[1] == last_day) and c0[0] != cx[0] and (c0[1] + 1) == cx[1]) -
             quicksum(x[(cy,c0)] for cy in cities_in_time if (cy[0] != 0 or cy[1] == 1) and c0[0] != cy[0] and c0[1] == (cy[1] + 1) )) == 0
