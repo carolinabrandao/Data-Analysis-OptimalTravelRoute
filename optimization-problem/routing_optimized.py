@@ -53,35 +53,27 @@ def solve(problem: OptimizationProblem) -> List[FlightModel]:
         model = Model("Problema de Otimização com Tempo")
 
         x = model.addVars(edges, vtype=GRB.BINARY, name="x")
-        # u = model.addVars(cities, vtype=GRB.CONTINUOUS)
 
         model.setObjective(quicksum(costs[e] * x[e] for e in edges), GRB.MINIMIZE)
 
-        # uma cidade só deve ser visitada uma vez (em qualquer dia)
+        # one city should be visited just one time
         for c in cities:
             model.addConstr(quicksum(x[e] for e in edges if e[0][0] == c) == 1, f"departing_from_{c}")
             model.addConstr(quicksum(x[e] for e in edges if e[1][0] == c) == 1, f"visiting_{c}")
 
-        # garantindo que eu saia da cidade 0 no primeiro dia e chegue na cidade zero no último dia
-        # isso passa a ser garantido pela maneira com que os dados são montados para o problema mas de qualquer forma é uma restrição importante deve estar no problema
-        # assim como a restrição de subtour
-        # model.addConstr(quicksum(x[e] for e in edges if e[0][0] == 0 and e[0][1] == days[0]) == 1, f"departing_base_{0}")
-        # model.addConstr(quicksum(x[e] for e in edges if e[1][0] == 0 and e[1][1] == last_day) == 1, f"visiting_base_{0}")
-
-        # garantir que eu esteja em somente uma cidade por vez
+        # A person should be in just one city per day
         for d in days:
             ""
-            # ninguém chega do primeiro dia, ou seja, não há nenhuma viagem do tipo i,0 para j,1
+            # no travels happens on the first day
             if d > 1:
                 model.addConstr(quicksum(x[e] for e in edges if e[1][1] == d) == 1, f"visiting_day_{d}")
-            # ninguém viaja no último dia, ou seja, não há nenhuma viagem do tipo i,d para j,d+1. d+1 não existe no nosso problema
+            # no travels happens on the last day
             if d < last_day:
                 model.addConstr(quicksum(x[e] for e in edges if e[0][1] == d) == 1, f"departing_day_{d}")
 
-        # garantindo que toda cidade acessada em um dado dia será também o ponto de partida de uma viagem nesse mesmo dia
-        # isso garante que o problema seja cronologicamente correto, já que sempre vamos de 0,1 para algum lugar i,1
-        # dessa forma, iremos de i,1 para j,2 e assim por diante até k, d-1, para 0,d
-        # além disso, subtours não podem ser formados já que toda rota começará em 0 e terminará em zero pela proposição anterior
+        # ensuring that every destination is also an origin of another travel in the same day
+        # also this ensure that every route created in a correct time order, considering that the date only has as initial travels 
+        # (0,0) to (c, 1) -> being c any city 
         model.addConstrs(
             (quicksum(x[(c0,cx)] for cx in cities_in_time if (cx[0] != 0 or cx[1] == last_day) and c0[0] != cx[0] and (c0[1] + 1) == cx[1]) -
             quicksum(x[(cy,c0)] for cy in cities_in_time if (cy[0] != 0 or cy[1] == 1) and c0[0] != cy[0] and c0[1] == (cy[1] + 1) )) == 0
