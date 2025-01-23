@@ -3,12 +3,13 @@ from typing import Dict,List
 from routing_optimized import solve
 from models import FlightModel, OptimizationProblem
 
+#Groupping the flights by route and founding the best solution
+
 flights = read_csv("flights_priced.csv")
 
 flightsByRouteId: Dict[int, List[FlightModel]] = {}
 cityByAirport: Dict[str, str] = {}
 
-#Origin City, Origin Airport, Destination City, Destination Airport, Date, Route Number, Distance (km), Price
 
 for index, flight in flights.iterrows():
     routeId = flight["Route Number"]

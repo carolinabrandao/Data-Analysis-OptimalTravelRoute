@@ -4,6 +4,8 @@ from typing import List
 
 FILE_NAME = "flights"
 
+# inserting the price in the flights
+
 df = pd.read_csv(f"{FILE_NAME}.csv")
 client = AmadeusClient()
 priceByFlight: List[float] = []
@@ -13,8 +15,7 @@ def getFlighPricesBasedOn(flght: List[str]):
     return {"PRICE": 1550}
 
 for i,row in df.iterrows():
-    # cuidado, nós só temos 2000 chamadas à API
-    #price = client.getFlighPricesBasedOn([row["Date"], row["Origin Airport"], row["Destination Airport"]])
+    price = client.getFlighPricesBasedOn([row["Date"], row["Origin Airport"], row["Destination Airport"]])
     priceByFlight.append(price["PRICE"])
 
 df["Price"] = priceByFlight

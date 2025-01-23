@@ -1,6 +1,4 @@
-from numpy import random
 from gurobipy import Model, GRB, quicksum
-from plot import plot_route_with_labels
 from models import OptimizationProblem, FlightModel
 from typing import List
 
