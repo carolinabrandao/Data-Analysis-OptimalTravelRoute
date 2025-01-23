@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 # Load the main CSV
 routes_df = pd.read_csv("flights.csv")
@@ -77,8 +77,9 @@ def find_greedy_path_with_distances(df, start_city, start_date):
         return_flight = return_flight_on_date.iloc[0]
         return_price = return_flight['Price']
         total_price += return_price
+        total_distance += return_flight['Distance (km)']
 
-    return visited_cities, total_distance, total_price
+    return visited_cities, round(total_distance,2), round(total_price,2)
 
 
 
@@ -111,7 +112,7 @@ for route_number, group in grouped_routes:
 results_df = pd.DataFrame(results)
 
 # Save the results to a CSV
-results_df.to_csv("greedy_path_results_with_distances.csv", index=False)
+results_df.to_csv("greedy_path.csv", index=False)
 
 # Display the results
 print(results_df)

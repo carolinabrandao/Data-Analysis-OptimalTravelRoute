@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the results of the greedy paths
-greedy_results = pd.read_csv("greedy_path_results.csv")  # Columns: Route Number, Path, Total Distance (km), Total Price
+greedy_results = pd.read_csv("greedy_path.csv")  # Columns: Route Number, Path, Total Distance (km), Total Price
 
 # Load the second CSV
 second_csv = pd.read_csv("routes_info_optimal.csv")  # Replace with your actual file name
@@ -27,10 +27,10 @@ merged_df = second_csv.merge(
 # Update the columns in the second CSV
 merged_df['Greedy Route'] = merged_df['Formatted Greedy Route']
 merged_df['Greedy Distance'] = merged_df['Total Distance (km)']
-merged_df['Greedy Price'] = merged_df['Total Price'].apply(lambda x: round(x, 2))  # Truncate prices to 2 decimal points
+merged_df['Greedy Price'] = merged_df['Total Price'].apply(lambda x: round(x, 2))
 
-# Drop intermediate columns and any unnecessary ones
-merged_df.drop(columns=['Formatted Greedy Route', 'Total Distance (km)', 'Total Price'], inplace=True)
+# Drop intermediate columns, the 'ID' column, and any unnecessary ones
+merged_df.drop(columns=['Formatted Greedy Route', 'Total Distance (km)', 'Total Price', 'ID'], inplace=True)
 
 # Save the updated CSV
 merged_df.to_csv("routes_final.csv", index=False)
