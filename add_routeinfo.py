@@ -1,12 +1,10 @@
 import pandas as pd
 import os
 
-# Nome do arquivo CSV
 csv_file = 'routes_info.csv'
 
-# Verifica se o arquivo já existe
+# Create the CSV file if it doesn't exist
 if not os.path.exists(csv_file):
-    # Cria o arquivo inicial se não existir
     columns = [
         "Route ID", "Start City", "Start Date", "Greedy Route", "Optimal Route",
         "Greedy Price", "Optimal Price", "Season", "Target Audience", "Region", "Subregion","Month"
@@ -15,13 +13,11 @@ if not os.path.exists(csv_file):
     df.to_csv(csv_file, index=False)
     print(f"Arquivo criado: {csv_file}")
 
-# Função para adicionar uma nova rota com campos iniciais vazios
+# Function to add a new route
 def add_route():
-    # Carrega o arquivo existente
     df = pd.read_csv(csv_file)
     
-    # Solicita os dados ao usuário
-    print("Adicionar uma nova rota:")
+    print("Add a new route:")
     route_id = input("Route ID: ")
     start_city = input("Start City: ")
     start_date = input("Start Date (YYYY-MM-DD): ")
@@ -31,15 +27,15 @@ def add_route():
     subregion = input("Subregion (EAST/WEST): ")
     month = input("Month (JUNE/JULY): ")
     
-    # Cria um dicionário com os dados da nova rota
+    # Create a new route DataFrame
     new_route = pd.DataFrame([{
         "Route ID": route_id,
         "Start City": start_city,
         "Start Date": start_date,
-        "Greedy Route": "",  # Campo vazio
-        "Optimal Route": "",  # Campo vazio
-        "Greedy Price": "",  # Campo vazio
-        "Optimal Price": "",  # Campo vazio
+        "Greedy Route": "",
+        "Optimal Route": "",
+        "Greedy Price": "",
+        "Optimal Price": "", 
         "Season": season.upper(),
         "Target Audience": target_audience.upper(),
         "Region": region.upper(),
@@ -47,17 +43,15 @@ def add_route():
         "Month": month.upper()
     }])
     
-    # Concatena a nova rota ao DataFrame existente
+    # Add the new route to the existing DataFrame
     df = pd.concat([df, new_route], ignore_index=True)
     
-    # Salva no CSV
+    # Save the updated DataFrame to the CSV file
     df.to_csv(csv_file, index=False)
-    print(f"Rota adicionada com sucesso ao arquivo '{csv_file}'!")
+    print(f"Successfully added the route to '{csv_file}'!")
 
-# Loop para adicionar várias rotas
 while True:
     add_route()
-    cont = input("Deseja adicionar outra rota? (S/N): ").strip().upper()
-    if cont != 'S':
-        print("Encerrando o programa.")
+    cont = input("Do you want to add a new route? (Y/N): ").strip().upper()
+    if cont != 'Y':
         break

@@ -21,7 +21,6 @@ def get_distance(origin, destination):
         return None
     return None
 
-# Load the CSV data
 file_path = 'routes_final.csv'
 df = pd.read_csv(file_path)
 
@@ -33,8 +32,8 @@ def calculate_optimal_distance_with_return(row):
         distance = get_distance(cities[i], cities[i+1])
         if distance:
             total_distance += distance
-        # Add a delay between requests
-        time.sleep(1)  # 1 second delay
+        # Add a delay between requests to avoid being blocked
+        time.sleep(1)
     # Add the return trip distance (last city back to start city)
     return_trip_distance = get_distance(cities[-1], row['Start City'])
     if return_trip_distance:
